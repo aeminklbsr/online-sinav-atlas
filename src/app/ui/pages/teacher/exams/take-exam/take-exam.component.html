@@ -1,0 +1,196 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <div class="content">
+    <div class="take-exam">
+      <!-- Exam Header -->
+      <div class="exam-header">
+        <div class="exam-info">
+          <h1>{{exam.title}}</h1>
+          <p class="course">{{exam.course}}</p>
+          <div class="stats">
+            <div class="stat">
+              <i class="bi bi-question-circle"></i>
+              <span>{{exam.totalQuestions}} Soru</span>
+            </div>
+            <div class="stat">
+              <i class="bi bi-clock"></i>
+              <span>{{exam.duration}} Dakika</span>
+            </div>
+            <div class="stat">
+              <i class="bi bi-star"></i>
+              <span>{{exam.points}} Puan</span>
+            </div>
+          </div>
+        </div>
+        <div class="timer" [ngClass]="{'warning': timeLeft <= 15}">
+          <i class="bi bi-clock"></i>
+          <span>{{formatTime(timeLeft)}}</span>
+        </div>
+      </div>
+
+      <!-- Question Navigation -->
+      <div class="question-nav">
+        <div class="nav-buttons">
+          <button *ngFor="let q of questions; let i = index" 
+                  [class.active]="currentQuestion === i"
+                  [class.answered]="isQuestionAnswered(i)"
+                  [class.flagged]="isQuestionFlagged(i)"
+                  (click)="goToQuestion(i)"
+                  class="question-number">
+            {{i + 1}}
+            <i *ngIf="isQuestionFlagged(i)" class="bi bi-flag-fill flag-icon"></i>
+          </button>
+        </div>
+        <div class="nav-legend">
+          <div class="legend-item">
+            <span class="legend-dot answered"></span>
+            <span>Cevaplandı</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot flagged"></span>
+            <span>İşaretlendi</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot"></span>
+            <span>Boş</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question Content -->
+      <div class="question-content" *ngIf="!examFinished">
+        <div class="question-header">
+          <div class="question-info">
+            <span class="question-number">Soru {{currentQuestion + 1}}/{{questions.length}}</span>
+            <span class="question-points">{{questions[currentQuestion].points}} Puan</span>
+          </div>
+          <button class="flag-button" 
+                  [class.flagged]="isQuestionFlagged(currentQuestion)"
+                  (click)="toggleFlagQuestion(currentQuestion)">
+            <i class="bi" [class.bi-flag]="!isQuestionFlagged(currentQuestion)" 
+               [class.bi-flag-fill]="isQuestionFlagged(currentQuestion)"></i>
+            {{isQuestionFlagged(currentQuestion) ? 'İşareti Kaldır' : 'Soruyu İşaretle'}}
+          </button>
+        </div>
+
+        <div class="question-text">
+          {{questions[currentQuestion].text}}
+        </div>
+
+        <!-- Multiple Choice Question -->
+        <div class="options" *ngIf="questions[currentQuestion].type === 'multiple'">
+          <label *ngFor="let option of questions[currentQuestion].options" class="option">
+            <input type="radio" 
+                   [name]="'question' + questions[currentQuestion].id"
+                   [value]="option"
+                   [(ngModel)]="answers[questions[currentQuestion].id]">
+            <span class="radio-custom"></span>
+            <span class="option-text">{{option}}</span>
+          </label>
+        </div>
+
+        <!-- Essay Question -->
+        <div class="essay" *ngIf="questions[currentQuestion].type === 'essay'">
+          <textarea [(ngModel)]="answers[questions[currentQuestion].id]"
+                    placeholder="Cevabınızı buraya yazın..."
+                    rows="6"></textarea>
+          <div class="essay-tools">
+            <button class="tool-button">
+              <i class="bi bi-type-bold"></i>
+            </button>
+            <button class="tool-button">
+              <i class="bi bi-type-italic"></i>
+            </button>
+            <button class="tool-button">
+              <i class="bi bi-type-underline"></i>
+            </button>
+            <button class="tool-button">
+              <i class="bi bi-list-ol"></i>
+            </button>
+            <button class="tool-button">
+              <i class="bi bi-list-ul"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="question-actions">
+          <button class="btn btn-outline" 
+                  (click)="previousQuestion()"
+                  [disabled]="currentQuestion === 0">
+            <i class="bi bi-arrow-left"></i> Önceki
+          </button>
+
+          <button class="btn btn-primary" 
+                  *ngIf="currentQuestion < questions.length - 1"
+                  (click)="nextQuestion()">
+            Sonraki <i class="bi bi-arrow-right"></i>
+          </button>
+
+          <button class="btn btn-success" 
+                  *ngIf="currentQuestion === questions.length - 1"
+                  (click)="submitExam()"
+                  [disabled]="isSubmitting">
+            <i class="bi bi-check-circle"></i>
+            {{isSubmitting ? 'Gönderiliyor...' : 'Sınavı Bitir'}}
+          </button>
+        </div>
+      </div>
+
+      <!-- Exam Progress -->
+      <div class="exam-progress" *ngIf="!examFinished">
+        <div class="progress-stats">
+          <div class="stat-item">
+            <span class="label">Cevaplanan</span>
+            <span class="value">{{getAnsweredCount()}}/{{questions.length}}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">İşaretlenen</span>
+            <span class="value">{{flaggedQuestions.size}}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">Kalan</span>
+            <span class="value">{{getUnansweredCount()}}</span>
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress" 
+               [style.width.%]="getProgressPercentage()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Exam Finished -->
+      <div class="exam-finished" *ngIf="examFinished">
+        <div class="success-animation">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <h2>Sınavınız Başarıyla Tamamlandı!</h2>
+        <p>Cevaplarınız kaydedildi. Sonuçlar en kısa sürede açıklanacaktır.</p>
+        <div class="exam-summary">
+          <div class="summary-item">
+            <span class="label">Toplam Soru</span>
+            <span class="value">{{questions.length}}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Cevaplanan</span>
+            <span class="value">{{getAnsweredCount()}}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Boş Bırakılan</span>
+            <span class="value">{{getUnansweredCount()}}</span>
+          </div>
+        </div>
+        <button routerLink="/teacher/dashboard" class="btn btn-primary">
+          <i class="bi bi-house"></i> Ana Sayfaya Dön
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" *ngIf="isSubmitting">
+  <div class="spinner"></div>
+</div>

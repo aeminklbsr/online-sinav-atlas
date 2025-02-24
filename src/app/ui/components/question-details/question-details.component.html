@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h5 class="modal-title">Soru Düzenle</h5>
+</div>
+
+<div class="modal-body">
+  <div class="mb-3">
+    <label class="form-label">Soru Metni</label>
+    <input type="text" class="form-control" [(ngModel)]="editableQuestion.soruMetni" placeholder="Soru metnini girin">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Puan</label>
+    <input type="number" class="form-control" [(ngModel)]="editableQuestion.puan" min="0">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Zorluk</label>
+    <select class="form-select" [(ngModel)]="editableDifficulty">
+      <option *ngFor="let difficulty of questionDifficulty" [value]="difficulty">{{ difficulty }}</option>
+    </select>
+  </div>
+
+  <hr>
+
+  <div>
+    <h6>Seçenekler</h6>
+    <div *ngFor="let option of options" class="d-flex align-items-center mb-2">
+      <input type="text" class="form-control me-2" [(ngModel)]="option.secenekMetni">
+      <input 
+        type="checkbox" 
+        [checked]="answerKey.soruSecenekId === option.id" 
+        (change)="updateAnswerKey(option.id!)">
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="activeModal.dismiss()">İptal</button>
+  <button class="btn btn-primary" (click)="saveAllChanges()">Tüm Değişiklikleri Kaydet</button>
+</div>

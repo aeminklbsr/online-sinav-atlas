@@ -1,0 +1,76 @@
+<div class="modal-header">
+  <h5 class="modal-title">Yeni Soru Bankası Oluştur</h5>
+</div>
+<!-- Progress Bar -->
+<div class="progress" role="progressbar" aria-label="Example 5px high" aria-valuemin="0" aria-valuemax="100"
+  [attr.aria-valuenow]="progressValue" style="height: 5px">
+  <div class="progress-bar bg-primary" [style.width.%]="progressValue"></div>
+</div>
+
+<div class="modal-body">
+  <!-- Başlık Ekleme -->
+  <div class="mb-3 border p-3 rounded shadow border-hover-effect">
+    <label for="questionBankTitle" class="form-label">Başlık</label>
+    <input type="text" id="questionBankTitle" class="form-control modern-input" [(ngModel)]="questionBankTitle"
+      name="questionBankTitle" placeholder="Başlık giriniz" maxlength="20">
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="border p-3 rounded mb-3 shadow border-hover-effect">
+        <label for="courseSelectName" class="form-label">Ders Seçin</label>
+        <select id="courseSelectName" class="form-select modern-select" [(ngModel)]="selectedCourse" name="course">
+          <option [ngValue]="null">Seçiniz</option>
+          <ng-container *ngFor="let course of courses">
+            <option [ngValue]="course">
+              {{ course.dersKodu }} - {{ course.dersAdi }}
+            </option>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+
+    <!-- Dönem Seçimi -->
+    <div class="col-md-6">
+      <div class="border p-3 rounded mb-3 shadow border-hover-effect">
+        <label for="coursePeriodSelect" class="form-label">Dönem Seçin</label>
+        <select id="coursePeriodSelect" class="form-select modern-select" [(ngModel)]="selectedPeriod">
+          <option value="">Seçiniz</option>
+          <option *ngFor="let period of coursePeriod" [value]="period">{{ period }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Sezon Seçimi -->
+    <div class="col-md-6">
+      <div class="border p-3 rounded mb-3 shadow border-hover-effect">
+        <label for="courseSeasonSelect" class="form-label">Ders Sezonu Seçin</label>
+        <select id="courseSeasonSelect" class="form-select modern-select" [(ngModel)]="selectedSeason">
+          <option value="">Seçiniz</option>
+          <option *ngFor="let season of courseSeason" [value]="season">{{ season }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sınav Kategorisi -->
+    <div class="col-md-6">
+      <div class="border p-3 rounded mb-3 shadow border-hover-effect">
+        <label for="examCategorySelect" class="form-label">Sınav Kategorisi</label>
+        <select id="examCategorySelect" class="form-select modern-select" [(ngModel)]="selectedExamCategory"
+          name="examCategory">
+          <option [ngValue]="null">Seçiniz</option>
+          <option *ngFor="let category of examCategory" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-light" (click)="closeModal()">Kapat</button>
+  <button type="button" class="btn btn-primary modern-button" (click)="createQuestionBank()">Oluştur</button>
+</div>

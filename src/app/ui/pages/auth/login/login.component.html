@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-lg">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <i class="bi bi-person-circle display-1 text-primary"></i>
+            <h2 class="mt-3">Giriş Yap</h2>
+          </div>
+          
+          <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <div class="mb-3">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-envelope"></i>
+                </span>
+                <input 
+                  type="email" 
+                  class="form-control" 
+                  placeholder="E-posta"
+                  [(ngModel)]="loginData.email"
+                  name="email"
+                  required
+                  email>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-lock"></i>
+                </span>
+                <input 
+                  type="password" 
+                  class="form-control" 
+                  placeholder="Şifre"
+                  [(ngModel)]="loginData.password"
+                  name="password"
+                  required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-3">
+              <i class="bi bi-box-arrow-in-right me-2"></i>
+              Giriş Yap
+            </button>
+
+            <div class="text-center">
+              <p class="mb-0">Hesabınız yok mu? 
+                <a routerLink="/register" class="text-primary text-decoration-none">Kayıt Ol</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

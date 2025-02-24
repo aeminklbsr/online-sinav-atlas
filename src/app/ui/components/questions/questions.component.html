@@ -1,0 +1,57 @@
+<div *ngIf="questions.length > 0" class="question-container">
+  <h3 class="mb-4 text-primary">Soru Listesi</h3>
+  
+  <div class="accordion" id="questionAccordion">
+    <div *ngFor="let question of questions; let i = index" class="accordion-item">
+      <h2 class="accordion-header" [id]="'heading' + i">
+        <button 
+          class="accordion-button collapsed d-flex justify-content-between" 
+          type="button" 
+          data-bs-toggle="collapse" 
+          [attr.data-bs-target]="'#collapse' + i"
+          aria-expanded="false" 
+          [attr.aria-controls]="'collapse' + i"
+        >
+          <div>
+            <strong>Soru:</strong> {{ question.soruMetni }}
+          </div>
+          
+          <span class="badge bg-info text-dark ms-3">Puan: {{ question.puan }}</span>
+          <span class="badge bg-success text-white ms-3">Zorluk: {{ questionDifficulty[question.zorluk - 1] }}</span>
+        </button>
+      </h2>
+
+      <div 
+        [id]="'collapse' + i" 
+        class="accordion-collapse collapse" 
+        [attr.aria-labelledby]="'heading' + i" 
+        data-bs-parent="#questionAccordion"
+      >
+        <div class="accordion-body">
+          <ul class="list-group options-list" *ngIf="question.id && optionsMap[question.id]?.length">
+            <li
+              *ngFor="let option of optionsMap[question.id]"
+              class="list-group-item d-flex justify-content-between align-items-center option-item"
+              [class.correct]="isCorrectOption(question.id!, option.id!)"
+            >
+            <span>
+              {{ optionLetters[option.secenekSirasi - 1] }}. {{ option.secenekMetni }}
+            </span>
+              <span *ngIf="isCorrectOption(question.id!, option.id!)" class="text-success"></span>
+            </li>
+          </ul>
+          <div class="d-flex gap-2">
+            <button (click)="openEditModal(question)" class="btn btn-warning btn-sm">Düzenle</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="questions.length === 0" class="alert alert-warning text-center mt-4">
+  Bu soru bankasında henüz soru yok.
+</div>
+<button class="btn btn-danger mt-4" (click)="closeModal()">Modalı Kapat</button>
+

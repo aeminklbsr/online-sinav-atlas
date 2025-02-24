@@ -1,0 +1,9 @@
+.border-hover-effect {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .border-hover-effect:hover {
+    transform: scale(1.03);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* Daha belirgin bir gölge */
+  }
+  

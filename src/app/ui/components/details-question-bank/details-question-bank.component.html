@@ -1,0 +1,73 @@
+<div class="user-modal">
+  <!-- Kullanıcı Bilgileri Her Zaman Görünür -->
+  <div class="user-card">
+    <div class="user-info" *ngIf="!editMode && bank">
+      <p class="name">
+        <strong>{{bank.dersAdi}} - {{bank.id}}</strong>
+      </p>
+      <hr />
+      <div class="info-row">
+        <div class="info-column">
+          <p class="info-item">
+            <strong>Dersin Kodu:</strong> {{bank.dersKodu}}
+          </p>
+        </div>
+        <div class="info-column">
+          <p class="info-item">
+            <strong>Ders Sezonu:</strong> {{bank.dersSezonu}}
+          </p>
+        </div>
+      </div>
+      <p class="info-item">
+        <strong>Ders Dönemi:</strong> {{bank.dersDonemi}}
+      </p>
+      <p class="info-item">
+        <strong>Konu Başlığı:</strong> {{bank.konuBasligi}}
+      </p>
+      <p class="info-item">
+        <span [ngClass]="{ 'text-success': !bank.isDeleted, 'text-danger': bank.isDeleted }">
+          {{ bank.isDeleted ? 'Pasif' : 'Aktif' }}
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Düzenleme Modu -->
+  <div *ngIf="editMode" class="edit-section">
+    <div class="input-group">
+      <input type="text" class="form-control" [(ngModel)]="updatedBank.dersKodu" placeholder="Ders Kodu" readonly />
+    </div>
+    <div class="input-group">
+      <input type="text" class="form-control" [(ngModel)]="updatedBank.dersAdi" placeholder="Dersin Adı" required  />
+    </div>
+    <div class="input-group">
+      <select class="form-select" [(ngModel)]="updatedBank.dersSezonu" required>
+        <option value="" disabled>Seçiniz</option>
+        <option *ngFor="let season of courseSeasons" [value]="season">{{ season }}</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select class="form-select" [(ngModel)]="updatedBank.dersDonemi" required>
+        <option value="" disabled>Seçiniz</option>
+        <option *ngFor="let period of coursePeriods" [value]="period">{{ period }}</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <input type="text" class="form-control" [(ngModel)]="updatedBank.konuBasligi" placeholder="Konu Başlığı" maxlength="20" required />
+    </div>
+    <div class="input-group">
+      <select class="form-control" [(ngModel)]="updatedBank.isDeleted">
+        <option [ngValue]="false">Aktif</option>
+        <option [ngValue]="true">Pasif</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Butonlar -->
+  <div class="button-group d-flex gap-2">
+    <button *ngIf="!editMode" type="button" class="btn btn-primary" (click)="editMode = true">Edit</button>
+    <button *ngIf="editMode" type="button" class="btn btn-success" (click)="saveChanges()">Kaydet</button>
+    <button *ngIf="editMode" type="button" class="btn btn-secondary" (click)="editMode = false">İptal</button>
+    <button (click)="closeModal()" class="btn btn-secondary">Kapat</button>
+  </div>
+</div>

@@ -1,0 +1,136 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <div class="content">
+    <div class="dashboard">
+      <div class="header">
+        <h1>Öğretmen Paneli</h1>
+        <div class="actions">
+          <button (click)="openModal()" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Yeni Soru Bankası Oluştur
+          </button>
+          <button routerLink="/teacher/exams/take/1" class="btn btn-secondary">
+            <i class="bi bi-pencil-square"></i>
+            Örnek Sınavı Çöz
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div *ngIf="isModalOpen" class="modal-backdrop">
+        <div class="modal-content">
+          <app-create-question-bank-modal (modalClosed)="closeModal()"></app-create-question-bank-modal>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-file-text"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Toplam Sınav</h3>
+              <p class="stat-value">12</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Toplam Öğrenci</h3>
+              <p class="stat-value">156</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Tamamlanan Sınavlar</h3>
+              <p class="stat-value">48</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-clock"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Aktif Sınavlar</h3>
+              <p class="stat-value">3</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-exams">
+          <h2>Soru Bankaları</h2>
+          <ul class="responsive-table">
+            <li class="table-header">
+              <div class="col col-1">Ders Kodu</div>
+              <div class="col col-2">Ders Adı</div>
+              <div class="col col-3">Ders Sezonu</div>
+              <div class="col col-4">Ders Dönemi</div>
+              <div class="col col-5">Konu Başlığı</div>
+              <div class="col col-6">Oluşturulma Tarihi</div>
+              <div class="col col-7">İşlemler</div>
+
+            </li>
+            <li class="table-row table-hover-effect" *ngFor="let bank of paginatedQuestionBanks"
+              [ngClass]="{ 'deleted-row': bank.isDeleted }">
+              <div class="col col-1 ">{{bank.dersKodu}}</div>
+              <div class="col col-2">{{bank.dersAdi}}</div>
+              <div class="col col-3">{{bank.dersSezonu}}</div>
+              <div class="col col-4">{{bank.dersDonemi}}</div>
+              <div class="col col-5">{{bank.konuBasligi}}</div>
+              <div class="col col-6">{{bank.createdDate | date: 'short' }}</div>
+              <div class="col col-7">
+                <div class="button-group">
+                  <button (click)="openDetailsModal(bank)" class="btn btn-sm btn-outline-primary me-2">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button (click)="deleteQuestionBank(bank)" [disabled]="bank.isDeleted"
+                    [ngClass]="{ 'disabled-button': bank.isDeleted }" class="btn btn-sm btn-outline-danger me-2">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  <button (click)="openQuestionsModal(bank)" class="btn btn-sm btn-outline-info">
+                    <i class="bi bi-question-square"></i>
+                  </button>
+                </div>
+
+              </div>
+
+            </li>
+            <div *ngIf="isDetailsModalOpen" class="modal-backdrop">
+              <div class="modal-content">
+                <app-details-question-bank [bank]="selectedQuestionBank!" (modalClosed)="closeDetailsModal()"
+                  (bankUpdated)="updateBankInList($event)"></app-details-question-bank>
+              </div>
+            </div>
+
+            <div *ngIf="isQuestionsModalOpen" class="modal-backdrop">
+              <div class="modal-content">
+                <app-questions [questionBankId]="selectedQuestionBank?.id ?? ''" (modalClosed)="closeQuestionsModal()">
+                </app-questions>
+                
+
+              </div>
+            </div>
+
+          </ul>
+          <!-- Sayfalama Butonları -->
+          <div class="pagination-controls">
+            <a href="#" (click)="prevPage($event)" [class.disabled]="page === 1" class="previous round">&#8249;</a>
+            <span class="page-info">Sayfa {{ page }} / {{ totalPages }}</span>
+            <a href="#" (click)="nextPage($event)" [class.disabled]="page >= totalPages" class="next round">&#8250;</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,211 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+  
+  <div class="content">
+    <div class="create-exam">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1>Yeni Sınav Oluştur</h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/teacher/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item"><a routerLink="/teacher/exams">Sınavlar</a></li>
+            <li class="breadcrumb-item active">Yeni Sınav</li>
+          </ol>
+        </nav>
+      </div>
+
+      <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <!-- Left Column -->
+          <div class="col-lg-8">
+            <!-- Basic Info Card -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="bi bi-info-circle"></i>Temel Bilgiler</h2>
+              </div>
+              <div class="card-body">
+                <div class="row g-3">
+                  <div class="col-md-8">
+                    <label class="form-label">Sınav Adı</label>
+                    <input type="text" class="form-control" formControlName="title" 
+                           placeholder="Örn: Matematik Final Sınavı">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Ders</label>
+                    <select class="form-select" formControlName="course">
+                      <option value="">Seçiniz</option>
+                      <option *ngFor="let course of courses" [value]="course.id">
+                        {{course.name}}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Açıklama</label>
+                    <textarea class="form-control" formControlName="description" rows="3"
+                              placeholder="Sınav hakkında açıklama yazın..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Question Bank Card -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="bi bi-journal-text"></i>Soru Bankası</h2>
+              </div>
+              <div class="card-body">
+                <div class="question-bank">
+                  <!-- Search and Filters -->
+                  <div class="search-box">
+                    <input type="text" class="form-control" placeholder="Soru ara...">
+                  </div>
+                  <div class="filters">
+                    <select class="form-select">
+                      <option value="">Tüm Dersler</option>
+                      <option *ngFor="let course of courses" [value]="course.id">
+                        {{course.name}}
+                      </option>
+                    </select>
+                    <select class="form-select">
+                      <option value="">Tüm Zorluk Seviyeleri</option>
+                      <option value="easy">Kolay</option>
+                      <option value="medium">Orta</option>
+                      <option value="hard">Zor</option>
+                    </select>
+                    <select class="form-select">
+                      <option value="">Tüm Soru Tipleri</option>
+                      <option value="multiple">Çoktan Seçmeli</option>
+                      <option value="essay">Yazılı</option>
+                    </select>
+                  </div>
+
+                  <!-- Question List -->
+                  <div class="question-list">
+                    <div *ngFor="let question of questionBank" class="question-item">
+                      <div class="question-header">
+                        <span class="badge" [ngClass]="question.type === 'multiple' ? 'badge-multiple' : 'badge-essay'">
+                          {{question.type === 'multiple' ? 'Çoktan Seçmeli' : 'Yazılı'}}
+                        </span>
+                        <button type="button" class="btn btn-sm btn-outline-primary" 
+                                (click)="addQuestion(question)">
+                          <i class="bi bi-plus"></i> Ekle
+                        </button>
+                      </div>
+                      <div class="question-content">{{question.text}}</div>
+                      <div class="question-meta">
+                        <span><i class="bi bi-book"></i>{{question.course}}</span>
+                        <span><i class="bi bi-bar-chart"></i>{{question.difficulty}}</span>
+                        <span><i class="bi bi-star"></i>{{question.points}} Puan</span>
+                      </div>
+                      <div class="options" *ngIf="question.type === 'multiple'">
+                        <div *ngFor="let option of question.options" class="option">
+                          {{option}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="col-lg-4">
+            <!-- Exam Settings Card -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="bi bi-gear"></i>Sınav Ayarları</h2>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label">Tarih</label>
+                  <input type="date" class="form-control" formControlName="date">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Başlangıç Saati</label>
+                  <input type="time" class="form-control" formControlName="startTime">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Süre (Dakika)</label>
+                  <input type="number" class="form-control" formControlName="duration">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Geçme Notu</label>
+                  <input type="number" class="form-control" formControlName="passingGrade">
+                </div>
+
+                <hr>
+
+                <div class="form-switch">
+                  <input class="form-check-input" type="checkbox" formControlName="shuffleQuestions">
+                  <label class="form-check-label">Soruları Karıştır</label>
+                </div>
+                <div class="form-switch">
+                  <input class="form-check-input" type="checkbox" formControlName="showResults">
+                  <label class="form-check-label">Sonuçları Göster</label>
+                </div>
+                <div class="form-switch">
+                  <input class="form-check-input" type="checkbox" formControlName="allowLateSubmissions">
+                  <label class="form-check-label">Geç Teslime İzin Ver</label>
+                </div>
+                <div class="form-switch">
+                  <input class="form-check-input" type="checkbox" formControlName="requireWebcam">
+                  <label class="form-check-label">Kamera Zorunlu</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Selected Questions Card -->
+            <div class="card">
+              <div class="card-header">
+                <h2><i class="bi bi-check-circle"></i>Seçilen Sorular</h2>
+              </div>
+              <div class="card-body">
+                <div class="selected-questions">
+                  <div class="question-count">
+                    {{selectedQuestions.length}} soru seçildi
+                  </div>
+
+                  <div class="total-points">
+                    <span>Toplam Puan</span>
+                    <div class="points">{{calculateTotalPoints()}}</div>
+                  </div>
+
+                  <div class="question-list">
+                    <div *ngFor="let question of selectedQuestions" class="question-item">
+                      <div class="question-header">
+                        <span class="badge" [ngClass]="question.type === 'multiple' ? 'badge-multiple' : 'badge-essay'">
+                          {{question.type === 'multiple' ? 'Çoktan Seçmeli' : 'Yazılı'}}
+                        </span>
+                        <button type="button" class="btn btn-sm btn-outline-danger" 
+                                (click)="removeQuestion(question.id)">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                      <div class="question-content">{{question.text}}</div>
+                      <div class="question-meta">
+                        <span><i class="bi bi-star"></i>{{question.points}} Puan</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary submit-btn w-100" 
+                        [disabled]="!examForm.valid || selectedQuestions.length === 0 || isLoading">
+                  <i class="bi bi-check-circle"></i>
+                  {{isLoading ? 'Oluşturuluyor...' : 'Sınavı Oluştur'}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" *ngIf="isLoading">
+  <div class="spinner"></div>
+</div>
