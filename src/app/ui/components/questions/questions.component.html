@@ -1,11 +1,18 @@
+<!-- İçerikten bağımsız, her zaman görünen kapatma butonu -->
+<div class="d-flex justify-content-end mb-3">
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+
 <div *ngIf="questions.length > 0" class="question-container">
-  <h3 class="mb-4 text-primary">Soru Listesi</h3>
-  
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="text-primary mb-0">Soru Listesi</h3>
+  </div>
+
   <div class="accordion" id="questionAccordion">
-    <div *ngFor="let question of questions; let i = index" class="accordion-item">
+    <div *ngFor="let question of questions; let i = index" class="accordion-item" [ngClass]="{ 'inactive-question': !question.aktifMi }">
       <h2 class="accordion-header" [id]="'heading' + i">
         <button 
-          class="accordion-button collapsed d-flex justify-content-between" 
+          class="accordion-button collapsed d-flex justify-content-between align-items-center" 
           type="button" 
           data-bs-toggle="collapse" 
           [attr.data-bs-target]="'#collapse' + i"
@@ -15,9 +22,10 @@
           <div>
             <strong>Soru:</strong> {{ question.soruMetni }}
           </div>
-          
-          <span class="badge bg-info text-dark ms-3">Puan: {{ question.puan }}</span>
-          <span class="badge bg-success text-white ms-3">Zorluk: {{ questionDifficulty[question.zorluk - 1] }}</span>
+          <div class="d-flex">
+            <span class="badge bg-info text-dark ms-3">Puan: {{ question.puan }}</span>
+            <span class="badge bg-success text-white ms-3">Zorluk: {{ questionDifficulty[question.zorluk - 1] }}</span>
+          </div>
         </button>
       </h2>
 
@@ -28,30 +36,32 @@
         data-bs-parent="#questionAccordion"
       >
         <div class="accordion-body">
-          <ul class="list-group options-list" *ngIf="question.id && optionsMap[question.id]?.length">
+          <ul class="list-group" *ngIf="question.id && optionsMap[question.id]?.length">
             <li
               *ngFor="let option of optionsMap[question.id]"
-              class="list-group-item d-flex justify-content-between align-items-center option-item"
+              class="list-group-item d-flex justify-content-between align-items-center"
               [class.correct]="isCorrectOption(question.id!, option.id!)"
             >
-            <span>
-              {{ optionLetters[option.secenekSirasi - 1] }}. {{ option.secenekMetni }}
-            </span>
-              <span *ngIf="isCorrectOption(question.id!, option.id!)" class="text-success"></span>
+              <span>
+                {{ optionLetters[option.secenekSirasi - 1] }}. {{ option.secenekMetni }}
+              </span>
+              <span *ngIf="isCorrectOption(question.id!, option.id!)" class="text-success">Doğru Cevap</span>
             </li>
           </ul>
-          <div class="d-flex gap-2">
+          <div class="d-flex gap-2 mt-3">
             <button (click)="openEditModal(question)" class="btn btn-warning btn-sm">Düzenle</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
 <div *ngIf="questions.length === 0" class="alert alert-warning text-center mt-4">
   Bu soru bankasında henüz soru yok.
 </div>
-<button class="btn btn-danger mt-4" (click)="closeModal()">Modalı Kapat</button>
 
+<!-- İçerikten bağımsız, her zaman görünen alt butonlar -->
+<div class="d-flex justify-content-end mt-4">
+  <button class="btn btn-primary" (click)="openAddQuestionModal()">Soru Ekle</button>
+</div>

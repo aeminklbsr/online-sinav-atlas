@@ -7,6 +7,8 @@ import { QuestionOptionService } from '../../../common/services/question-option.
 import { QuestionAnswerKeyService } from '../../../common/services/question-answer-key.service';
 import { QuestionDetailsComponent } from '../question-details/question-details.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { QuestionAddComponent } from '../question-add/question-add.component';
+
 @Component({
   selector: 'app-questions',
   standalone: true,
@@ -58,7 +60,7 @@ export class QuestionsComponent implements OnInit {
       next: (response) => {
         this.optionsMap[soruId] = response.data.sort((a, b) => a.secenekSirasi - b.secenekSirasi);
         this.optionsMap[soruId].forEach(option => {
-          console.log(`Soru ID: ${soruId} | Seçenek ID: ${option.id} | Seçenek Sırası: ${option.secenekSirasi}`);
+          
         });
       },
       error: (err) => {
@@ -75,7 +77,7 @@ export class QuestionsComponent implements OnInit {
           const soruSecenekId = response.data[0].soruSecenekId;
           this.answerKeyMap[soruId] = soruSecenekId;
 
-          console.log(`Soru ID: ${soruId} | Cevap Anahtarı ID: ${cevapAnahtariId} | Doğru Seçenek ID: ${soruSecenekId}`);
+          
         }
       },
       error: (err) => console.error(`Cevap anahtarı getirilirken hata (soruId: ${soruId}):`, err)
@@ -97,6 +99,15 @@ export class QuestionsComponent implements OnInit {
 
     modalRef.result.then(() => {
       this.fetchQuestions(); //soruları tekrar çağırıp yenileme
+    }).catch(() => {});
+  }
+
+  openAddQuestionModal() {
+    const modalRef = this.modalService.open(QuestionAddComponent, { size: 'lg', centered: true });
+    modalRef.componentInstance.questionBankId = this.questionBankId; // Soru bankası ID'sini gönderiyoruz
+  
+    modalRef.result.then(() => {
+      this.fetchQuestions(); // Modal kapandıktan sonra soru listesini güncelle
     }).catch(() => {});
   }
   

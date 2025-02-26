@@ -1,35 +1,52 @@
 <div class="modal-header">
   <h5 class="modal-title">Soru Düzenle</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
 </div>
-
 <div class="modal-body">
-  <div class="mb-3">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="mb-3 border p-3 rounded shadow">
+        <label class="form-label">Puan</label>
+        <input type="number" class="form-control" [(ngModel)]="editableQuestion.puan" min="0">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3 border p-3 rounded shadow">
+        <label class="form-label">Zorluk</label>
+        <select class="form-select" [(ngModel)]="editableDifficulty">
+          <option *ngFor="let difficulty of questionDifficulty" [value]="difficulty">{{ difficulty }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="mb-3 border p-3 rounded shadow">
+        <label class="form-label">Aktiflik Durumu</label>
+        <div class="form-check form-switch">
+          <input type="checkbox" class="form-check-input" [(ngModel)]="editableQuestion.aktifMi"
+            [checked]="editableQuestion.aktifMi">
+          <label class="form-check-label">{{ editableQuestion.aktifMi ? 'Aktif' : 'Pasif' }}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3 border p-3 rounded shadow ">
     <label class="form-label">Soru Metni</label>
     <input type="text" class="form-control" [(ngModel)]="editableQuestion.soruMetni" placeholder="Soru metnini girin">
   </div>
-
-  <div class="mb-3">
-    <label class="form-label">Puan</label>
-    <input type="number" class="form-control" [(ngModel)]="editableQuestion.puan" min="0">
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">Zorluk</label>
-    <select class="form-select" [(ngModel)]="editableDifficulty">
-      <option *ngFor="let difficulty of questionDifficulty" [value]="difficulty">{{ difficulty }}</option>
-    </select>
-  </div>
-
-  <hr>
-
+  
   <div>
-    <h6>Seçenekler</h6>
-    <div *ngFor="let option of options" class="d-flex align-items-center mb-2">
-      <input type="text" class="form-control me-2" [(ngModel)]="option.secenekMetni">
-      <input 
-        type="checkbox" 
-        [checked]="answerKey.soruSecenekId === option.id" 
-        (change)="updateAnswerKey(option.id!)">
+    <div class="mb-3 border p-3 rounded shadow">
+      <label class="form-label">Seçenekler</label>
+      <div *ngFor="let option of options; let i = index" class="d-flex align-items-center mb-2">
+        <span class="me-2">{{ optionLetters[i] }}.</span>
+        <input type="text" class="form-control me-2" [(ngModel)]="option.secenekMetni" placeholder="Seçenek metni">
+        <input 
+          class="form-check-input" 
+          type="radio" 
+          [checked]="answerKey.soruSecenekId === option.id"
+          (change)="updateAnswerKey(option.id!)"
+        >
+      </div>
     </div>
   </div>
 </div>

@@ -41,5 +41,15 @@
     padding: 15px;
   }
 
+
+  .inactive-question {
+    background-color: rgba(255, 0, 0, 0.15); /* Hafif kırmızı arka plan */ 
+    border-radius: 4px;
+  }
+  
+  .inactive-question .accordion-button {
+    background-color: rgba(255, 0, 0, 0.2);  /* Başlık kısmına da kırmızı ton */
+    color: #8b0000; /* Yazı rengi koyu kırmızı */
+  }
   
   

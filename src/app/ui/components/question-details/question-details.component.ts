@@ -27,6 +27,7 @@ export class QuestionDetailsComponent implements OnInit {
   questionDifficulty: string[] = ['Kolay', 'Orta', 'Zor'];
   options: QuestionOption[] = [];
   answerKey!: QuestionAnswerKey;
+  optionLetters: string[] = ['A', 'B', 'C', 'D', 'E', 'F'];
 
   constructor(
     public activeModal: NgbActiveModal,

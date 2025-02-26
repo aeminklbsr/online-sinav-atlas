@@ -8,11 +8,12 @@ import { CreateQuestionBankService } from '../../../../common/services/create-qu
 import { CreateQuestionBank } from '../../../../common/models/create-question-bank';
 import Swal from 'sweetalert2';
 import { QuestionsComponent } from '../../../components/questions/questions.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({ 
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, SidebarComponent, CreateQuestionBankModalComponent, DetailsQuestionBankComponent,QuestionsComponent],
+  imports: [CommonModule, RouterLink, SidebarComponent, CreateQuestionBankModalComponent, DetailsQuestionBankComponent,QuestionsComponent, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   providers: [CreateQuestionBankService]
@@ -26,6 +27,10 @@ export class TeacherDashboardComponent implements OnInit {
   page = 1;
   itemsPerPage = 5;
   totalPages = 1;
+  showDeleted = true;
+  isModalOpen = false;
+  isDetailsModalOpen = false;
+  
 
   constructor(private questionBankService: CreateQuestionBankService) {}
 
@@ -39,14 +44,26 @@ export class TeacherDashboardComponent implements OnInit {
         this.questionBanks = response.data.sort((a, b) => 
           new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
         );
+        
         this.calculateTotalPages();
         this.updatePagination();
-        console.log('Soru Bankaları:', this.questionBanks);
+        this.filterQuestionBanks();
       },
       error: (err) => {
         console.error('Hata:', err);
       }
     });
+  }
+
+  filterQuestionBanks(): void {
+    const filteredBanks = this.showDeleted
+      ? this.questionBanks
+      : this.questionBanks.filter(bank => !bank.isDeleted);
+
+    this.totalPages = Math.ceil(filteredBanks.length / this.itemsPerPage);
+    const startIndex = (this.page - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedQuestionBanks = filteredBanks.slice(startIndex, endIndex);
   }
 
   calculateTotalPages() {
@@ -60,24 +77,24 @@ export class TeacherDashboardComponent implements OnInit {
   }
 
   nextPage(event: Event) {
-    event.preventDefault(); // Sayfanın yenilenmesini önler
+    event.preventDefault();
     if (this.page < this.totalPages) {
       this.page++;
+      
       this.updatePagination();
+      this.filterQuestionBanks();
     }
   }
   
   prevPage(event: Event) {
-    event.preventDefault(); // Sayfanın yenilenmesini önler
+    event.preventDefault();
     if (this.page > 1) {
       this.page--;
+      
       this.updatePagination();
+      this.filterQuestionBanks();
     }
   }
-  
-
-  isModalOpen = false;
-  isDetailsModalOpen = false;
 
   openModal() {
     this.isModalOpen = true;
@@ -99,8 +116,10 @@ export class TeacherDashboardComponent implements OnInit {
   updateBankInList(updatedBank: CreateQuestionBank) {
     const index = this.questionBanks.findIndex(bank => bank.id === updatedBank.id);
     if (index !== -1) {
-      this.questionBanks[index] = { ...updatedBank };  // Ana listeyi güncelle
-      this.updatePagination();                         // Sayfalama ve liste görünümünü yenile
+      this.questionBanks[index] = { ...updatedBank }; 
+      
+      this.updatePagination();
+      this.filterQuestionBanks();                        
     }
   }
 
@@ -125,7 +144,7 @@ export class TeacherDashboardComponent implements OnInit {
               timer: 2000,
               showConfirmButton: false
             });
-            this.getQuestionBanks(); // Listeyi yenile
+            this.getQuestionBanks();
           },
           error: (err) => {
             console.error('Silme hatası:', err);
@@ -148,8 +167,7 @@ export class TeacherDashboardComponent implements OnInit {
     this.selectedQuestionBank = bank;
     this.isQuestionsModalOpen = true;
   }
-  
-  
+
   closeQuestionsModal() {
     this.isQuestionsModalOpen = false;
   }

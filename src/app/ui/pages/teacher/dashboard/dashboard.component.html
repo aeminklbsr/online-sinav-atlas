@@ -6,9 +6,13 @@
       <div class="header">
         <h1>Öğretmen Paneli</h1>
         <div class="actions">
-          <button (click)="openModal()" class="btn btn-primary">
+          <button (click)="openModal()" class="btn create-question-bank-btn">
             <i class="bi bi-plus-lg"></i>
             Yeni Soru Bankası Oluştur
+          </button>
+          <button routerLink="/teacher/exams/take/1" class="btn create-question-bank-btn">
+            <i class="bi bi-pencil-square"></i>
+            Taslak Oluştur
           </button>
           <button routerLink="/teacher/exams/take/1" class="btn btn-secondary">
             <i class="bi bi-pencil-square"></i>
@@ -66,9 +70,18 @@
             </div>
           </div>
         </div>
-
+        
         <div class="recent-exams">
-          <h2>Soru Bankaları</h2>
+          <div class="d-flex justify-content-between">
+            <h2>Soru Bankaları</h2>
+          <div class="filter-section">
+            <label class="form-check-label me-2">Silinenleri Göster</label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" [(ngModel)]="showDeleted" (change)="filterQuestionBanks()" />
+            </div>
+          </div>
+        </div>
+          
           <ul class="responsive-table">
             <li class="table-header">
               <div class="col col-1">Ders Kodu</div>
@@ -97,13 +110,14 @@
                     [ngClass]="{ 'disabled-button': bank.isDeleted }" class="btn btn-sm btn-outline-danger me-2">
                     <i class="bi bi-trash"></i>
                   </button>
-                  <button (click)="openQuestionsModal(bank)" class="btn btn-sm btn-outline-info">
-                    <i class="bi bi-question-square"></i>
+                  <button (click)="openQuestionsModal(bank)" class="btn btn-sm btn-outline-warning me-2">
+                    <i class="bi bi-list-task"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-success me-2">
+                    <i class="bi bi-box-fill"></i>
                   </button>
                 </div>
-
               </div>
-
             </li>
             <div *ngIf="isDetailsModalOpen" class="modal-backdrop">
               <div class="modal-content">
@@ -116,11 +130,8 @@
               <div class="modal-content">
                 <app-questions [questionBankId]="selectedQuestionBank?.id ?? ''" (modalClosed)="closeQuestionsModal()">
                 </app-questions>
-                
-
               </div>
             </div>
-
           </ul>
           <!-- Sayfalama Butonları -->
           <div class="pagination-controls">

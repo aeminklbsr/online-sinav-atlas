@@ -1,73 +1,134 @@
+<div class="d-flex justify-content-end mb-3">
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
 <div class="user-modal">
   <!-- Kullanıcı Bilgileri Her Zaman Görünür -->
-  <div class="user-card">
-    <div class="user-info" *ngIf="!editMode && bank">
-      <p class="name">
-        <strong>{{bank.dersAdi}} - {{bank.id}}</strong>
+  <div class="user-card ">
+    <div class="user-info border p-3 rounded shadow" *ngIf="!editMode && bank">
+      <p class="name text-center mb-4 ">
+        <strong>{{ bank.dersAdi }}</strong>
       </p>
-      <hr />
-      <div class="info-row">
-        <div class="info-column">
-          <p class="info-item">
-            <strong>Dersin Kodu:</strong> {{bank.dersKodu}}
-          </p>
+
+      <div class="row gx-3">
+
+        <!-- Dersin Kodu -->
+        <div class="col-md-6 mb-3">
+          <div class="border p-3 rounded shadow">
+            <p class="info-item mb-0">
+              <strong>Dersin Kodu:</strong> {{ bank.dersKodu }}
+            </p>
+          </div>
         </div>
-        <div class="info-column">
-          <p class="info-item">
-            <strong>Ders Sezonu:</strong> {{bank.dersSezonu}}
-          </p>
+
+        <!-- Konu Başlığı -->
+        <div class="col-md-6 mb-3">
+          <div class="border p-3 rounded shadow">
+            <p class="info-item mb-0">
+              <strong>Konu Başlığı:</strong> {{ bank.konuBasligi }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Ders Sezonu -->
+        <div class="col-md-6 mb-3">
+          <div class="border p-3 rounded shadow">
+            <p class="info-item mb-0">
+              <strong>Ders Sezonu:</strong> {{ bank.dersSezonu }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Ders Dönemi -->
+        <div class="col-md-6 mb-3">
+          <div class="border p-3 rounded shadow">
+            <p class="info-item mb-0">
+              <strong>Ders Dönemi:</strong> {{ bank.dersDonemi }}
+            </p>
+          </div>
+        </div>
+
+
+        <!-- Oluşturulma Tarihi -->
+        <div class="col-md-6 mb-3">
+          <div class="border p-3 rounded shadow">
+            <p class="info-item mb-0">
+              <strong>Oluşturulma Tarihi</strong> {{ bank.createdDate | date: 'short' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Aktif/Pasif Durumu -->
+        <div class="col-md-6 mb-3">
+          <div class="border p-3 rounded shadow">
+            <p class="info-item mb-0">
+              <strong>Durum:</strong>
+              <span [ngClass]="{ 'text-success': !bank.isDeleted, 'text-danger': bank.isDeleted }">
+                {{ bank.isDeleted ? 'Pasif' : 'Aktif' }}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
-      <p class="info-item">
-        <strong>Ders Dönemi:</strong> {{bank.dersDonemi}}
-      </p>
-      <p class="info-item">
-        <strong>Konu Başlığı:</strong> {{bank.konuBasligi}}
-      </p>
-      <p class="info-item">
-        <span [ngClass]="{ 'text-success': !bank.isDeleted, 'text-danger': bank.isDeleted }">
-          {{ bank.isDeleted ? 'Pasif' : 'Aktif' }}
-        </span>
-      </p>
     </div>
   </div>
 
   <!-- Düzenleme Modu -->
-  <div *ngIf="editMode" class="edit-section">
-    <div class="input-group">
-      <input type="text" class="form-control" [(ngModel)]="updatedBank.dersKodu" placeholder="Ders Kodu" readonly />
-    </div>
-    <div class="input-group">
-      <input type="text" class="form-control" [(ngModel)]="updatedBank.dersAdi" placeholder="Dersin Adı" required  />
-    </div>
-    <div class="input-group">
-      <select class="form-select" [(ngModel)]="updatedBank.dersSezonu" required>
-        <option value="" disabled>Seçiniz</option>
-        <option *ngFor="let season of courseSeasons" [value]="season">{{ season }}</option>
-      </select>
-    </div>
-    <div class="input-group">
-      <select class="form-select" [(ngModel)]="updatedBank.dersDonemi" required>
-        <option value="" disabled>Seçiniz</option>
-        <option *ngFor="let period of coursePeriods" [value]="period">{{ period }}</option>
-      </select>
-    </div>
-    <div class="input-group">
-      <input type="text" class="form-control" [(ngModel)]="updatedBank.konuBasligi" placeholder="Konu Başlığı" maxlength="20" required />
-    </div>
-    <div class="input-group">
-      <select class="form-control" [(ngModel)]="updatedBank.isDeleted">
-        <option [ngValue]="false">Aktif</option>
-        <option [ngValue]="true">Pasif</option>
-      </select>
+  <div *ngIf="editMode" class="edit-section ">
+    <div class="row gx-3">
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 rounded shadow">
+          <input type="text" class="form-control" [(ngModel)]="updatedBank.dersKodu" placeholder="Ders Kodu" readonly />
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 rounded shadow">
+          <input type="text" class="form-control" [(ngModel)]="updatedBank.dersAdi" placeholder="Dersin Adı" required />
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 rounded shadow">
+          <select class="form-select" [(ngModel)]="updatedBank.dersSezonu" required>
+            <option value="" disabled>Seçiniz</option>
+            <option *ngFor="let season of courseSeasons" [value]="season">{{ season }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 rounded shadow">
+          <select class="form-select" [(ngModel)]="updatedBank.dersDonemi" required>
+            <option value="" disabled>Seçiniz</option>
+            <option *ngFor="let period of coursePeriods" [value]="period">{{ period }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 rounded shadow">
+          <input type="text" class="form-control" [(ngModel)]="updatedBank.konuBasligi" placeholder="Konu Başlığı"
+            maxlength="20" required />
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="border p-3 rounded shadow">
+          <div class="form-check form-switch">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="statusSwitch" 
+              [(ngModel)]="updatedBank.isDeleted"
+            >
+            <label class="form-check-label" for="statusSwitch">
+              {{ updatedBank.isDeleted ? 'Pasif' : 'Aktif' }}
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- Butonlar -->
-  <div class="button-group d-flex gap-2">
-    <button *ngIf="!editMode" type="button" class="btn btn-primary" (click)="editMode = true">Edit</button>
-    <button *ngIf="editMode" type="button" class="btn btn-success" (click)="saveChanges()">Kaydet</button>
-    <button *ngIf="editMode" type="button" class="btn btn-secondary" (click)="editMode = false">İptal</button>
-    <button (click)="closeModal()" class="btn btn-secondary">Kapat</button>
-  </div>
+<!-- Butonlar -->
+<div class="d-flex justify-content-end mt-3 gap-2">
+  <button *ngIf="!editMode" type="button" class="btn btn-primary" (click)="editMode = true">Edit</button>
+  <button *ngIf="editMode" type="button" class="btn btn-success" (click)="saveChanges()">Kaydet</button>
+  <button *ngIf="editMode" type="button" class="btn btn-secondary" (click)="editMode = false">İptal</button>
 </div>
