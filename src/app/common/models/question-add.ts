@@ -5,7 +5,7 @@ export interface QuestionAdd {
   id?: string;
   soruBankasiId: string;
   soruMetni: string;
-  puan: number;
+
   zorluk: number;
   soruTipi: number;
   aktifMi: boolean;

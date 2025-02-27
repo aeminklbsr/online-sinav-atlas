@@ -4,16 +4,21 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CreateQuestionBankModalComponent } from '../../../components/create-question-bank/create-question-bank.component';
 import { DetailsQuestionBankComponent } from '../../../components/details-question-bank/details-question-bank.component';
+import { CreateExamTaskComponent } from '../../../components/title-exam-task/title-exam-task.component';
+
 import { CreateQuestionBankService } from '../../../../common/services/create-question-bank.service';
 import { CreateQuestionBank } from '../../../../common/models/create-question-bank';
 import Swal from 'sweetalert2';
 import { QuestionsComponent } from '../../../components/questions/questions.component';
 import { FormsModule } from '@angular/forms';
+import { ExamTasksComponent } from "../../../components/exam-tasks/exam-tasks.component";
+import { QuesetionToTaskComponent } from "../../../components/quesetion-to-task/quesetion-to-task.component";
+
 
 @Component({ 
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, SidebarComponent, CreateQuestionBankModalComponent, DetailsQuestionBankComponent,QuestionsComponent, FormsModule],
+  imports: [CommonModule, RouterLink, SidebarComponent, CreateQuestionBankModalComponent, DetailsQuestionBankComponent, QuestionsComponent, FormsModule, CreateExamTaskComponent, ExamTasksComponent, QuesetionToTaskComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   providers: [CreateQuestionBankService]
@@ -30,9 +35,10 @@ export class TeacherDashboardComponent implements OnInit {
   showDeleted = true;
   isModalOpen = false;
   isDetailsModalOpen = false;
-  
+  isCreateExamTaskModalOpen = false;
+  isExamTaskModalOpen = false;
 
-  constructor(private questionBankService: CreateQuestionBankService) {}
+  constructor(private questionBankService: CreateQuestionBankService, ) {}
 
   ngOnInit(): void {
     this.getQuestionBanks();
@@ -113,6 +119,15 @@ export class TeacherDashboardComponent implements OnInit {
     this.isDetailsModalOpen = false;
   }
 
+openExamTaskModal() {
+    this.isExamTaskModalOpen = true;  // Modal açılır
+  }
+
+  closeExamTaskModal() {
+    this.isExamTaskModalOpen = false;  // Modal kapanır
+  }
+  
+
   updateBankInList(updatedBank: CreateQuestionBank) {
     const index = this.questionBanks.findIndex(bank => bank.id === updatedBank.id);
     if (index !== -1) {
@@ -171,4 +186,30 @@ export class TeacherDashboardComponent implements OnInit {
   closeQuestionsModal() {
     this.isQuestionsModalOpen = false;
   }
+
+  openCreateExamTaskModal() {
+    this.isCreateExamTaskModalOpen = true; // Modalı aç
+  }
+  
+  closeCreateExamTaskModal() {
+    this.isCreateExamTaskModalOpen = false; // Modalı kapat
+  }
+  
+  onTaskCreated() {
+    this.isCreateExamTaskModalOpen = false; // Modalı kapat
+    this.getQuestionBanks(); // Güncellenmiş listeyi al
+  }
+
+  isQuesetionToTaskModalOpen = false; // Yeni modal için kontrol
+taskId: string = ''; // Yeni oluşturulan task ID'yi tutacağız
+
+openQuesetionToTaskModal(taskId: string) {
+  this.taskId = taskId; // Task ID'yi set et
+  this.isQuesetionToTaskModalOpen = true;
+}
+
+closeQuesetionToTaskModal() {
+  this.isQuesetionToTaskModalOpen = false;
+}
+  
 }

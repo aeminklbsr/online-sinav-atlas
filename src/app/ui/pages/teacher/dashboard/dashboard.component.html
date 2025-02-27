@@ -10,7 +10,7 @@
             <i class="bi bi-plus-lg"></i>
             Yeni Soru Bankası Oluştur
           </button>
-          <button routerLink="/teacher/exams/take/1" class="btn create-question-bank-btn">
+          <button (click)="openCreateExamTaskModal()" class="btn create-question-bank-btn">
             <i class="bi bi-pencil-square"></i>
             Taslak Oluştur
           </button>
@@ -20,14 +20,6 @@
           </button>
         </div>
       </div>
-
-      <!-- Modal -->
-      <div *ngIf="isModalOpen" class="modal-backdrop">
-        <div class="modal-content">
-          <app-create-question-bank-modal (modalClosed)="closeModal()"></app-create-question-bank-modal>
-        </div>
-      </div>
-
       <div class="dashboard-content">
         <div class="stats-grid">
           <div class="stat-card">
@@ -70,18 +62,19 @@
             </div>
           </div>
         </div>
-        
+
         <div class="recent-exams">
           <div class="d-flex justify-content-between">
             <h2>Soru Bankaları</h2>
-          <div class="filter-section">
-            <label class="form-check-label me-2">Silinenleri Göster</label>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" [(ngModel)]="showDeleted" (change)="filterQuestionBanks()" />
+            <div class="filter-section">
+              <label class="form-check-label me-2">Silinenleri Göster</label>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="showDeleted"
+                  (change)="filterQuestionBanks()" />
+              </div>
             </div>
           </div>
-        </div>
-          
+
           <ul class="responsive-table">
             <li class="table-header">
               <div class="col col-1">Ders Kodu</div>
@@ -113,25 +106,12 @@
                   <button (click)="openQuestionsModal(bank)" class="btn btn-sm btn-outline-warning me-2">
                     <i class="bi bi-list-task"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-success me-2">
+                  <button (click)="openExamTaskModal()" class="btn btn-sm btn-outline-success me-2">
                     <i class="bi bi-box-fill"></i>
                   </button>
                 </div>
               </div>
             </li>
-            <div *ngIf="isDetailsModalOpen" class="modal-backdrop">
-              <div class="modal-content">
-                <app-details-question-bank [bank]="selectedQuestionBank!" (modalClosed)="closeDetailsModal()"
-                  (bankUpdated)="updateBankInList($event)"></app-details-question-bank>
-              </div>
-            </div>
-
-            <div *ngIf="isQuestionsModalOpen" class="modal-backdrop">
-              <div class="modal-content">
-                <app-questions [questionBankId]="selectedQuestionBank?.id ?? ''" (modalClosed)="closeQuestionsModal()">
-                </app-questions>
-              </div>
-            </div>
           </ul>
           <!-- Sayfalama Butonları -->
           <div class="pagination-controls">
@@ -139,9 +119,48 @@
             <span class="page-info">Sayfa {{ page }} / {{ totalPages }}</span>
             <a href="#" (click)="nextPage($event)" [class.disabled]="page >= totalPages" class="next round">&#8250;</a>
           </div>
-
         </div>
       </div>
     </div>
+  </div>
+</div>
+<!-- Modal -->
+<div *ngIf="isModalOpen" class="modal-backdrop">
+  <div class="modal-content">
+    <app-create-question-bank-modal (modalClosed)="closeModal()"></app-create-question-bank-modal>
+  </div>
+</div>
+
+<div *ngIf="isCreateExamTaskModalOpen" class="custom-modal-backdrop">
+  <div class="custom-modal-content">
+    <app-create-exam-task [questionBanks]="questionBanks" (taskCreated)="getQuestionBanks()"
+      (close)="closeCreateExamTaskModal()" (openQuesetionToTask)="openQuesetionToTaskModal($event)">
+    </app-create-exam-task>
+  </div>
+</div>
+
+<div *ngIf="isDetailsModalOpen" class="modal-backdrop">
+  <div class="modal-content">
+    <app-details-question-bank [bank]="selectedQuestionBank!" (modalClosed)="closeDetailsModal()"
+      (bankUpdated)="updateBankInList($event)"></app-details-question-bank>
+  </div>
+</div>
+
+<div *ngIf="isExamTaskModalOpen" class="custom-modal-backdrop">
+  <div class="custom-modal-content">
+    <app-exam-task (close)="closeExamTaskModal()"></app-exam-task>
+  </div>
+</div>
+<div *ngIf="isQuestionsModalOpen" class="modal-backdrop">
+  <div class="modal-content">
+    <app-questions [questionBankId]="selectedQuestionBank?.id ?? ''" (modalClosed)="closeQuestionsModal()">
+    </app-questions>
+  </div>
+</div>
+
+<div *ngIf="isQuesetionToTaskModalOpen" class="custom-modal-backdrop">
+  <div class="custom-modal-content">
+    <app-quesetion-to-task [taskId]="taskId" (close)="closeQuesetionToTaskModal()">
+    </app-quesetion-to-task>
   </div>
 </div>

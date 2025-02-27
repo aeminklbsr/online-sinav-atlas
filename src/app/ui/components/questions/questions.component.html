@@ -23,8 +23,8 @@
             <strong>Soru:</strong> {{ question.soruMetni }}
           </div>
           <div class="d-flex">
-            <span class="badge bg-info text-dark ms-3">Puan: {{ question.puan }}</span>
             <span class="badge bg-success text-white ms-3">Zorluk: {{ questionDifficulty[question.zorluk - 1] }}</span>
+            
           </div>
         </button>
       </h2>
@@ -51,6 +51,7 @@
           <div class="d-flex gap-2 mt-3">
             <button (click)="openEditModal(question)" class="btn btn-warning btn-sm">Düzenle</button>
           </div>
+          <span> {{question.id}}</span>
         </div>
       </div>
     </div>

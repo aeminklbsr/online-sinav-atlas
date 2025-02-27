@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <h5 class="modal-title">Sınav Taslağı Oluştur</h5>
+</div>
+
+<div class="modal-body">
+  <!-- Soru Bankası Seçimi -->
+  <div class="mb-3">
+    <label for="questionBankSelect" class="form-label">Soru Bankası Seç</label>
+    <select id="questionBankSelect" class="form-select" [(ngModel)]="selectedQuestionBankId">
+      <option value="" disabled selected>Seçiniz...</option>
+      <option *ngFor="let bank of questionBanks" [value]="bank.id">{{ bank.konuBasligi }}</option>
+    </select>
+  </div>
+
+  <!-- Taslak Adı -->
+  <div class="mb-3">
+    <label for="taskName" class="form-label">Taslak Adı</label>
+    <input type="text" id="taskName" class="form-control" [(ngModel)]="examTaskData.soruTaslakAdi" placeholder="Taslak adını girin">
+  </div>
+
+  <!-- Açıklama -->
+  <div class="mb-3">
+    <label for="taskDescription" class="form-label">Açıklama</label>
+    <textarea id="taskDescription" class="form-control" [(ngModel)]="examTaskData.aciklama" placeholder="Açıklama girin"></textarea>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" (click)="nextModal()">Devam</button>
+  <button class="btn btn-secondary" (click)="closeModal()">Kapat</button>
+  <button class="btn btn-primary" (click)="createExamTask()">Oluştur</button>
+</div>

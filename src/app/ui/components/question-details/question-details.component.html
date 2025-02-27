@@ -6,12 +6,6 @@
   <div class="row g-3">
     <div class="col-md-4">
       <div class="mb-3 border p-3 rounded shadow">
-        <label class="form-label">Puan</label>
-        <input type="number" class="form-control" [(ngModel)]="editableQuestion.puan" min="0">
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="mb-3 border p-3 rounded shadow">
         <label class="form-label">Zorluk</label>
         <select class="form-select" [(ngModel)]="editableDifficulty">
           <option *ngFor="let difficulty of questionDifficulty" [value]="difficulty">{{ difficulty }}</option>

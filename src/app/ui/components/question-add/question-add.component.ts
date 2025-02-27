@@ -28,7 +28,6 @@ export class QuestionAddComponent {
 
   questionData = {
     title: '',
-    points: 0,
     difficulty: 'Kolay',
     type: 'Çoktan Seçmeli',
     optionCount: 'A, B, C',
@@ -77,7 +76,7 @@ export class QuestionAddComponent {
       alert('Önce soru bankası oluşturulmalı!');
       return;
     }
-    if ( !this.questionData.title || !this.questionData.points || !this.questionData.difficulty || !this.questionData.type || !this.questionData.optionCount) {
+    if ( !this.questionData.title || !this.questionData.difficulty || !this.questionData.type || !this.questionData.optionCount) {
       alert('Lütfen tüm alanları doldurun.');
       return;
 
@@ -87,7 +86,6 @@ export class QuestionAddComponent {
       questionId: this.questionId,
       soruBankasiId: this.questionBankId,
       soruMetni: this.questionData.title,
-      puan: Number(this.questionData.points),
       zorluk: this.getDifficultyValue(),
       soruTipi: this.getQuestionTypeValue(),
       aktifMi: this.questionData.status === 'Aktif',
@@ -253,7 +251,6 @@ export class QuestionAddComponent {
   resetForm() {
     this.questionData = {
       title: '',
-      points: 0,
       difficulty: 'Kolay',
       type: 'Çoktan Seçmeli',
       optionCount: 'A, B, C',

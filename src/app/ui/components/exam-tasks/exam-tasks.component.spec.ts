@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { ExamTaskComponent } from './exam-task.component';
+import { ExamTaskComponent } from './exam-tasks.component';
 
 describe('ExamTaskComponent', () => {
   let component: ExamTaskComponent;
