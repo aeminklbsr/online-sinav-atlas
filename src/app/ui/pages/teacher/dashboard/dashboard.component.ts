@@ -5,7 +5,6 @@ import { RouterLink } from '@angular/router';
 import { CreateQuestionBankModalComponent } from '../../../components/create-question-bank/create-question-bank.component';
 import { DetailsQuestionBankComponent } from '../../../components/details-question-bank/details-question-bank.component';
 import { CreateExamTaskComponent } from '../../../components/title-exam-task/title-exam-task.component';
-
 import { CreateQuestionBankService } from '../../../../common/services/create-question-bank.service';
 import { CreateQuestionBank } from '../../../../common/models/create-question-bank';
 import Swal from 'sweetalert2';

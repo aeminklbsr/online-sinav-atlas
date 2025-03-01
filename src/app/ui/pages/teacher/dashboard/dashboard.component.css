@@ -339,6 +339,7 @@ h2 {
   }
 
   .col-1 {
+<<<<<<< HEAD
     flex-basis: 10%;
   }
 
@@ -365,6 +366,32 @@ h2 {
   .col-7 {
     flex-basis: 15%;
   }
+=======
+    flex-basis: 20%;
+  }
+
+  .col-2 {
+    flex-basis: 20%;
+  }
+
+  .col-3 {
+    flex-basis: 10%;
+  }
+
+  .col-4 {
+    flex-basis: 10%;
+  }
+
+  .col-5 {
+    flex-basis: 20%;
+  }
+
+  .col-6 {
+    flex-basis: 20%;
+  }
+
+
+>>>>>>> a766ae5 (güncelleme)
 
   @media all and (max-width: 767px) {
     .table-header {
